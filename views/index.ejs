@@ -23,12 +23,13 @@
            <% files.forEach(function(file) { %>
            <div class="card card-body mb-3">
             <% if(file.isImage) { %>
-            <img src="image/<%= file.filename %>" alt="">
+            <img src="/image/<%= file.filename %>" alt="">
             <% } else { %>
                 <%= file.filename %>
             <% } %>
-            <form method="POST" action="/files/<%= file._id %>?_method=DELETE"></form>
-            <button class="btn btn-danger btn-block mt4">Delete</button>
+            <form method="POST" action="/file/<%= file._id %>?_method=DELETE">
+                <button class="btn btn-danger btn-block mt4">Delete</button>
+            </form>
         </div>    
         <% }) %>
         <% } else { %>
