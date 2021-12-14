@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const { stringify } = require('nodemon/lib/utils');
-// email address, Linkedin profile url, mobile phone number and i.d
 const PostSchema = mongoose.Schema({
+    name:{
+        type:String,
+        required:true
+    },
     date:{
         type:Date,
         default:Date.Now
@@ -11,10 +14,6 @@ const PostSchema = mongoose.Schema({
         type:String,
         required:false,
         default:null
-    },
-    name:{
-        type:String,
-        required:true
     },
     email:{
         type:String,

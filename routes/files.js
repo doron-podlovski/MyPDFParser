@@ -11,6 +11,7 @@ const methodOverride = require('method-override');
 const pdf = require('pdf-parse');
 const fs = require('fs');
 const applicants = require('../models/Applicants');
+const Applicants = require('../models/Applicants');
 
 require('dotenv/config');
 
@@ -20,10 +21,9 @@ router.use(bodyParser.raw())
 //Init gfs
 var gfs;
 
-mongoose.connect(process.env.DB_CONNECTION,()=>{console.log("Connected to MonngoDB")});
-
 //Create a connection to mongo
 const conn = mongoose.createConnection(process.env.DB_CONNECTION);
+mongoose.connect(process.env.DB_CONNECTION,()=>{console.log("Connected to MonngoDB")});
 
 conn.once('open',  ()=>{
     //Init stream
@@ -39,26 +39,34 @@ function getDocumentPartsByName(partName,text)
     return substring.substring(0,substring.indexOf('\n'));    
 }
 
-function pdfParserTry(dataBuffer,fileName)
+function getApplicantName(text)
+{
+    //Assumption: the name of the applicant will be at the top of the file.
+    var name = text.substring(0,50).trim();            
+    var applicantName = name.substring(0,name.indexOf('\n'));        
+    return applicantName;
+}
+
+function parsePdfAndStore(dataBuffer,fileName)
 {
     if(dataBuffer && (dataBuffer[0] == 0x25 && dataBuffer[1] == 0x50 && dataBuffer[2] == 0x44 && dataBuffer[3] == 0x46))
     {               
         pdf(dataBuffer).then(function(data) {                            
-            var text = data.text;                        
+            var text = data.text;      
+            var applicantName = getApplicantName(text);            
             var linkedinUrl = getDocumentPartsByName("Linkedin.com",text);
             var phoneNumber = getDocumentPartsByName("05",text).trim();
             var ValidatedPhoneNumber = phoneNumber.match(/^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$/gi);
             if(text.includes("ID","id"))
             {
                 var id = getDocumentPartsByName("ID",text).replace(/\D/g, "");
-                var ValidatedID = id.match(/^[0-9]{9}$/gi);
-                
+                var ValidatedID = id.match(/^[0-9]{9}$/gi);                
             }
             var email = text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);            
             var cvInfo = new applicants(
                 {
                     id_number:ValidatedID.toString(),
-                    name:"Doron Podlovski",
+                    name:applicantName,
                     mobile:ValidatedPhoneNumber.toString(),
                     email:email.toString(),
                     Linkedin:linkedinUrl.toString(),
@@ -137,7 +145,7 @@ router.post('/upload', upload.single('file'), (req, res)=>{
         });
         read_stream.on('end', function () {
             var buff = Buffer.concat(file);
-            pdfParserTry(buff,fileName);
+            parsePdf(buff,fileName);
                         
         });
     }    
@@ -205,7 +213,21 @@ router.get('/doc/:filename',(req,res)=>{
         }
 
     });
-    });
+    });  
+    
+    router.get('/applicant/:filename',async(req,res)=>{
+        
+        try{
+        await applicants.findOne({ CV_FileName: req.params.filename}, function (err, doc){
+             res.send(doc);
+        });
+    }
+    catch(err)
+    {
+        res.send(err);
+    }
+
+    });  
 
 router.delete('file/:id',(req,res)=>{
     console.log("Trying to delete " + req.params.id );

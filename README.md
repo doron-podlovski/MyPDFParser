@@ -75,7 +75,6 @@ Guidelines and notes:
 7.  While it's up to you to make sure it works, you don't have to supply us with db-connection, and though you can supply a working PDF file, we will try our own.
 
 
-
 ### Built With
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
@@ -124,16 +123,46 @@ _Below is an example of how you can instruct your audience on installing and set
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+After starting, browse the following URL:
+```
+http://localhost:[App port]
+```
+The page if for easy access to the application API.
 
+# Limitations 
+* This apppliaciton is working <b>only</b> with english based C.V`s 
+* The application will upload an hebrew C.V. to the database, but will miss the name of the applicant
 
+# Application API:
+```
+'/' - Home page, renders the index.ejs file.
+```
 
+```
+'/ping' - Will display version info acts as ping to the system.
+```
 
+```
+'/upload' - uploads a pdf file 
+```
 
-<!-- ROADMAP -->
-## Roadmap
+```
+'/files' - get all files stored in the database 
+```
 
+```
+'/image/:filename' - For future use, for loading applicants pictures for dispaly
+```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+```
+'/doc/:filename' - Gets a document file name and makes it acessable to display
+```
+```
+'/applicant/:filename' - Dispaly the applicant parsed inforamtion
+```
+```
+'file/:id' - Gets a specific file to be deleted.
+```
 
 
 

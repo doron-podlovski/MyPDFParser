@@ -20,17 +20,21 @@
             </form>
            <hr>
            <% if(files) { %>
-           <% files.forEach(function(file) { %>
+           <% files.forEach(function(file) { %>            
            <div class="card card-body mb-3">
             <% if(file.isImage) { %>
             <img src="/image/<%= file.filename %>" alt="">
             <% } else { %>
                 <a href="/doc/<%= file.filename %>"><%= file.filename %></a>
             <% } %>
+            <div class="card card-body mb-3">
+                <a href="/applicant/<%= file.filename %>">Click me!</a>
+                
+            </div>
             <form method="POST" action="/file/<%= file._id %>?_method=DELETE">
                 <button class="btn btn-danger btn-block mt4">Delete</button>
             </form>
-        </div>    
+        </div>            
         <% }) %>
         <% } else { %>
             <p>No files to show!</p>            
