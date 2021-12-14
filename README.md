@@ -94,7 +94,7 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
-*Node.JS [Download from Node.JS.org](https://nodejs.org/en/)
+* Node.JS [Download from Node.JS.org](https://nodejs.org/en/)
 * npm
   ```sh
   npm install npm@latest -g
@@ -129,11 +129,11 @@ http://localhost:[App port]
 ```
 The page if for easy access to the application API.
 
-# Limitations 
+### Limitations 
 * This apppliaciton is working <b>only</b> with english based C.V`s 
 * The application will upload an hebrew C.V. to the database, but will miss the name of the applicant
 
-# Application API:
+### Application API:
 ```
 '/' - Home page, renders the index.ejs file.
 ```
@@ -163,8 +163,6 @@ The page if for easy access to the application API.
 ```
 'file/:id' - Gets a specific file to be deleted.
 ```
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
